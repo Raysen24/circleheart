@@ -12,6 +12,10 @@ npm run dev
 
 Open http://localhost:5173.
 
+## Live site
+
+https://circleheart.id — deployed automatically by GitHub Actions from the `main` branch of github.com/Raysen24/circleheart (GitHub Pages, custom domain via `public/CNAME`). Every push to `main` redeploys in about two minutes.
+
 ## Build for production
 
 ```bash
