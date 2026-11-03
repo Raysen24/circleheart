@@ -1,16 +1,24 @@
 // All menu content transcribed from MenuBook_CH_rev 4.pdf
 export const WHATSAPP = '6282194895838';
 export const INSTAGRAM = 'circle.heart.id';
+export const SOCIAL = {
+  instagram: 'https://www.instagram.com/circle.heart.id',
+  tiktok: 'https://www.tiktok.com/@circle.heart.id',
+};
 
 export const LOCATIONS = [
   {
     name: 'Cendrawasih',
     address: 'Jl. Cendrawasih No. 276, Makassar',
+    grab: 'https://app.grab.com/s/9u5XZyY3',
+    gofood: 'https://gofood.co.id/makassar/restaurant/circle-heart-salad-cendrawasih-3b252d25-0705-4335-ad89-0d2914bf6807',
     maps: 'https://www.google.com/maps/search/?api=1&query=Circle+Heart+Salad+Jl+Cendrawasih+276+Makassar',
   },
   {
-    name: 'Tamalanrea',
+    name: 'Tamalanrea (BTP)',
     address: 'Jl. Tamalanrea Raya Blok M No. 1, MR Food Court, Makassar',
+    grab: 'https://app.grab.com/s/loa3uhwG',
+    gofood: 'https://gofood.co.id/makassar/restaurant/circle-heart-salad-tamalanrea-btp-e340cb0b-53f6-492b-9fbb-9001a9c930dd',
     maps: 'https://www.google.com/maps/search/?api=1&query=MR+Food+Court+Tamalanrea+Raya+Blok+M+Makassar',
   },
 ];

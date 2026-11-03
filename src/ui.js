@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { SALADS, MEDIUM, SNACKS, EXTRAS, DRESSINGS, MEATS, BUILDER_EXTRAS, CATERING, LOCATIONS, WHATSAPP, INSTAGRAM, rupiah, short } from './data.js';
+import { SALADS, MEDIUM, SNACKS, EXTRAS, DRESSINGS, MEATS, BUILDER_EXTRAS, CATERING, LOCATIONS, WHATSAPP, INSTAGRAM, SOCIAL, rupiah, short } from './data.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -176,17 +176,32 @@ export function initCatering() {
 }
 
 /* ---------------- Visit ---------------- */
+const GRAB_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#00B14F"/><path d="M8 7.4h4.7a2.9 2.9 0 0 1 0 5.8h-.6l2.6 3.4H12l-2.4-3.2V16.6H8V7.4zm1.6 1.5v2.8h3a1.4 1.4 0 0 0 0-2.8h-3z" fill="#fff"/></svg>`;
+const GOFOOD_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#EE2737"/><path d="M12 5.2a6.8 6.8 0 1 0 0 13.6 6.8 6.8 0 0 0 0-13.6zm0 3.1a3.7 3.7 0 1 1 0 7.4 3.7 3.7 0 0 1 0-7.4z" fill="#fff"/><circle cx="12" cy="12" r="1.6" fill="#fff"/></svg>`;
+export const deliveryButtons = (l, size = '') => `
+  <a class="btn btn--grab ${size}" href="${l.grab}" target="_blank" rel="noopener">${GRAB_ICON} GrabFood</a>
+  <a class="btn btn--gofood ${size}" href="${l.gofood}" target="_blank" rel="noopener">${GOFOOD_ICON} GoFood</a>`;
+
 export function initVisit() {
   $('#locations').innerHTML = LOCATIONS.map(l => `
     <article class="loc tilt">
       <p class="eyebrow">Outlet</p>
       <h3>${l.name}</h3>
       <p>${l.address}</p>
-      <a class="btn btn--ghost" href="${l.maps}" target="_blank" rel="noopener">Open in Maps</a>
+      <div class="loc__actions">
+        ${deliveryButtons(l)}
+        <a class="btn btn--ghost" href="${l.maps}" target="_blank" rel="noopener">Open in Maps</a>
+      </div>
     </article>`).join('');
   const order = wa('Halo Circle Heart! Saya mau pesan salad.');
   ['#navOrder', '#visitOrder'].forEach(s => $(s).href = order);
-  ['#igLink', '#visitIg'].forEach(s => $(s).href = `https://instagram.com/${INSTAGRAM}`);
+  ['#igLink', '#visitIg'].forEach(s => $(s).href = SOCIAL.instagram);
+  $('#visitTt').href = SOCIAL.tiktok;
+  $$('[data-social]').forEach(a => a.href = SOCIAL[a.dataset.social]);
+  // hero: delivery per outlet
+  const hd = $('#heroDelivery');
+  if (hd) hd.innerHTML = `<span class="hero__delivery-label">Delivery</span>` + LOCATIONS.map(l => `
+    <div class="hero__delivery-outlet"><span>${l.name}</span>${deliveryButtons(l, 'btn--sm')}</div>`).join('');
   $('#year').textContent = new Date().getFullYear();
 }
 
