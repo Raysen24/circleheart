@@ -113,7 +113,7 @@ export function openModal(d, kind) {
   $('#modalContainHead').textContent = kind === 'juss' ? 'Made with' : kind === 'gifts' ? 'How it works' : 'Contain';
   $('#modalContain').innerHTML = d.contain.map(c => `<li>${c}</li>`).join('') + (d.bowlOnly ? d.bowlOnly.map(c => `<li class="alt">${c} (bowl only)</li>`).join('') : '');
   $('#modalChoice').innerHTML = d.choice ? `<p><b>Choice of meat:</b> ${MEATS.map(m => m.name + (m.extra ? ` (+${short(m.extra)})` : '')).join(', ')}.<br><b>Choice of dressing:</b> ${DRESSINGS.map(x => x.name).join(', ')}.</p>` : '';
-  $('#modalOrder').href = wa(d.from ? `Halo Circle Heart! Saya mau tanya ${d.name} (mulai ${rupiah(d.from)}).` : `Halo Circle Heart! Saya mau pesan ${d.name}${d.size ? ' (' + d.size + ')' : ''} — ${rupiah(d.price)}.`);
+  $('#modalOrder').href = wa(d.from ? `Halo Circle Heart! Saya mau tanya ${d.name}.` : `Halo Circle Heart! Saya mau pesan ${d.name}${d.size ? ' (' + d.size + ')' : ''}.`);
   lastFocus = document.activeElement;
   m.classList.add('is-open'); m.setAttribute('aria-hidden', 'false');
   document.dispatchEvent(new CustomEvent('modal:open'));
@@ -167,7 +167,7 @@ export function initBuilder(scene) {
     gsap.fromTo(priceEl, { scale: 1.15 }, { scale: 1, duration: .5, ease: 'back.out(2)' });
     $('#sumTitle').textContent = `All In Salad · ${state.style === 'bowl' ? 'Bowl' : 'Wrap'}`;
     const extrasTxt = [...state.extras].map(id => BUILDER_EXTRAS.find(e => e.id === id).name).join(', ');
-    $('#sumOrder').href = wa(`Halo Circle Heart! Saya mau pesan All In Salad (${state.style}) dengan ${state.meat.name}, dressing ${state.dressing.name}${extrasTxt ? ', extra: ' + extrasTxt : ''}. Total ${rupiah(total)}.`);
+    $('#sumOrder').href = wa(`Halo Circle Heart! Saya mau pesan All In Salad (${state.style}) dengan ${state.meat.name}, dressing ${state.dressing.name}${extrasTxt ? ', extra: ' + extrasTxt : ''}.`);
   };
 
   $('#styleChips').addEventListener('click', (e) => { const b = e.target.closest('.chip'); if (!b) return; $$('#styleChips .chip').forEach(c => c.classList.toggle('is-active', c === b)); state.style = b.dataset.style; scene.setStyle(state.style); summarize(); });
@@ -290,7 +290,7 @@ export function initHeroPicker(scene) {
       $('.hero__dish-price', dish).textContent = (d.choice ? 'from ' : '') + rupiah(d.price);
       const order = $('.hero__dish-order', dish);
       if (d.choice) { order.textContent = 'Build yours →'; order.href = '#builder'; order.removeAttribute('target'); }
-      else { order.textContent = 'Order this →'; order.href = wa(`Halo Circle Heart! Saya mau pesan ${d.name} — ${rupiah(d.price)}.`); order.setAttribute('target', '_blank'); }
+      else { order.textContent = 'Order this →'; order.href = wa(`Halo Circle Heart! Saya mau pesan ${d.name}.`); order.setAttribute('target', '_blank'); }
     }
   };
   root.addEventListener('click', (e) => { const b = e.target.closest('.pick'); if (b) apply(b.dataset.bowl); });
