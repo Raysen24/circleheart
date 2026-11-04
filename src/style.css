@@ -133,6 +133,8 @@ em { font-style: normal; color: var(--orange); }
 
 /* 3D canvas */
 .scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+/* Keep the canvas and label layer at the large viewport height so the phone address bar never resizes them */
+@supports (height: 100lvh) { .scene, .labels, .bg { height: 100lvh; bottom: auto; } }
 .scene.is-interactive { pointer-events: auto; }
 main, footer, .marquee, .nav { position: relative; z-index: 2; }
 .labels { z-index: 3; }
@@ -408,6 +410,14 @@ html[data-theme="yellow"] .nav:not(.is-scrolled) .nav__cta { background: var(--i
 
 /* Reveal defaults (GSAP sets final) */
 .reveal { opacity: 0; transform: translateY(28px); }
+
+/* Phone: swipeable dressings strip instead of the pinned scrub */
+.dressings--swipe .dressings__pin { min-height: 0; padding: calc(var(--nav-h) + 2rem) 0 3rem; overflow: visible; }
+.dressings--swipe .dressings__track { width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 1.5rem 1rem 2rem; gap: 1rem; scrollbar-width: none; }
+.dressings--swipe .dressings__track::-webkit-scrollbar { display: none; }
+.dressings--swipe .cup { scroll-snap-align: center; width: 200px; }
+.dressings--swipe .dressings__head::after { content: 'swipe →'; display: block; margin-top: .4rem; font-family: var(--font-hand); font-size: 1.2rem; color: #b9e07a; opacity: .8; }
+@supports (height: 100svh) { @media (max-width: 1024px) { .hero { min-height: 100svh; } } }
 
 /* Responsive */
 @media (max-width: 1024px) {

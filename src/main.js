@@ -5,6 +5,9 @@ import { SaladScene } from './scene.js';
 import { mountDoodles, initMenu, initModal, initDressings, initBuilder, initCatering, initVisit, initTilt, initCursor, initHeroPicker } from './ui.js';
 
 gsap.registerPlugin(ScrollTrigger);
+// Phones show/hide the address bar while scrolling; without this every such resize re-measures all triggers and causes jumps.
+ScrollTrigger.config({ ignoreMobileResize: true });
+const isTouch = window.matchMedia('(hover: none), (pointer: coarse), (max-width: 1024px)').matches;
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -89,7 +92,7 @@ function heroIntro() {
   $$('.hero .reveal').forEach(el => el.classList.remove('reveal'));
 }
 function setupHero() {
-  gsap.to('.hero__content', { y: -80, opacity: .3, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+  if (!isTouch) gsap.to('.hero__content', { y: -80, opacity: .3, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
   document.addEventListener('bowl:toss', () => gsap.fromTo('.hero__hint', { scale: 1 }, { scale: 1.15, yoyo: true, repeat: 1, duration: .2 }));
 }
 
@@ -127,7 +130,7 @@ function setupReveals() {
     gsap.fromTo(words, { yPercent: 110, rotate: 4 }, { yPercent: 0, rotate: 0, duration: .9, stagger: .05, ease: 'power4.out', scrollTrigger: { trigger: h, start: 'top 88%', once: true } });
   });
   ScrollTrigger.batch('.reveal', {
-    start: 'top 88%', once: true,
+    start: isTouch ? 'top 94%' : 'top 88%', once: true,
     onEnter: (els) => gsap.to(els, { y: 0, opacity: 1, duration: .9, stagger: .09, ease: 'power3.out', overwrite: true }),
   });
 }
@@ -155,12 +158,18 @@ function setupPoses() {
   // exploded view scrubs with scroll through the story section
   ScrollTrigger.create({ trigger: '#story', start: 'top 85%', end: 'top 15%', scrub: true, onUpdate: (s) => scene.setExplodeScroll(s.progress) });
   // on phones the hero bowl slides up out of the way as the hero copy scrolls past
-  ScrollTrigger.create({ trigger: '#hero', start: 'top top', end: 'bottom 40%', scrub: true, onUpdate: (s) => scene.setHeroScroll(s.progress) });
+  ScrollTrigger.create({ trigger: '#hero', start: 'top top', end: 'bottom 40%', scrub: true, onUpdate: (s) => scene.setHeroScroll(s.progress, s.scroll()) });
 }
 
 /* ---------- Dressings horizontal scroll ---------- */
 function setupDressingsScroll() {
   const track = $('#dressingsTrack');
+  if (isTouch) {
+    // On phones a pinned, scroll-scrubbed strip fights the native scroll. Use a plain swipeable row instead.
+    $('#dressings').classList.add('dressings--swipe');
+    gsap.fromTo('.cup', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .7, stagger: .06, ease: 'power3.out', scrollTrigger: { trigger: '#dressings', start: 'top 75%', once: true } });
+    return;
+  }
   const getDist = () => Math.max(0, track.scrollWidth - innerWidth + 80);
   gsap.to(track, {
     x: () => -getDist(), ease: 'none',

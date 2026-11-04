@@ -56,7 +56,8 @@ export class SaladScene {
   constructor(canvas, labelRoot) {
     this.canvas = canvas; this.labelRoot = labelRoot;
     this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.isMobile = window.innerWidth <= 1024;
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.isMobile ? 1.5 : 2));
     this.renderer.outputColorSpace = THREE.SRGBColorSpace; this.renderer.toneMapping = THREE.NoToneMapping;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50); this.camera.position.set(0, 0, 8);
@@ -157,12 +158,12 @@ export class SaladScene {
     this.pool = new THREE.Mesh(new THREE.PlaneGeometry(0.95, 0.7), this.poolMat); this.pool.position.set(0.05, 0.28, 0.33); this.pool.scale.setScalar(0.001); this.dressGroup.add(this.pool);
     this.dripMat = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false, color: 0x8c2a2f, opacity: 0.9 }); this.dripGeo = new THREE.CircleGeometry(0.035, 12);
     this.orbit = new THREE.Group(); this.scene.add(this.orbit);
-    const N = window.innerWidth < 760 ? 16 : ORBIT.length;
+    const N = this.isMobile ? 12 : ORBIT.length;
     this.orbiters = ORBIT.slice(0, N).map(([name, w], i) => {
       const s = this.sprite(name, w, { shadow: 0.18, shadowDrop: 0.05 }); this.orbit.add(s); s.scale.setScalar(0.78);
       return { s, a: (i / N) * Math.PI * 2 + rnd(-0.2, 0.2), r: rnd(1.7, 2.7), y: rnd(-1.3, 1.3), z: rnd(-2.6, -0.5), phase: rnd(0, 6), spin: rnd(-0.25, 0.25), ht: i / N, dir: i % 2 ? 1 : -1 };
     });
-    const P = 140; const pos = new Float32Array(P * 3); this.pVel = new Float32Array(P);
+    const P = this.isMobile ? 60 : 140; const pos = new Float32Array(P * 3); this.pVel = new Float32Array(P);
     for (let i = 0; i < P; i++) { pos[i * 3] = rnd(-7, 7); pos[i * 3 + 1] = rnd(-4.5, 4.5); pos[i * 3 + 2] = rnd(-3, 1.5); this.pVel[i] = rnd(0.05, 0.2); }
     const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     this.pMat = new THREE.PointsMaterial({ map: this.dotTex, size: 0.09, transparent: true, depthWrite: false, opacity: 0.0, color: 0xfff1c9, sizeAttenuation: true });
@@ -185,7 +186,7 @@ export class SaladScene {
   bindEvents() {
     window.addEventListener('resize', () => this.resize());
     window.addEventListener('pointermove', (e) => {
-      this.mouse.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+      this.mouse.set((e.clientX / this.vw) * 2 - 1, -(e.clientY / this.vh) * 2 + 1);
       if (this.dragging) { const dx = e.clientX - this.lastX; this.dragVel = dx * 0.004; this.dragRot = THREE.MathUtils.clamp(this.dragRot + this.dragVel, -0.6, 0.6); this.lastX = e.clientX; }
       else this.hoverCheck();
     });
@@ -211,7 +212,9 @@ export class SaladScene {
     else this.toss();
   }
   resize() {
-    const w = innerWidth, h = innerHeight;
+    const w = this.canvas.clientWidth || innerWidth, h = this.canvas.clientHeight || innerHeight;
+    if (w === this.lastW && h === this.lastH) return;
+    this.lastW = w; this.lastH = h; this.vw = w; this.vh = h;
     this.renderer.setSize(w, h, false); this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
     this.isMobile = w <= 1024;
     this.viewH = 2 * this.camera.position.z * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2)); this.viewW = this.viewH * this.camera.aspect;
@@ -220,7 +223,7 @@ export class SaladScene {
   /* ---------- public API ---------- */
   setPose(name) { this.target = { ...(POSES[name] || POSES.hero) }; this.poseName = name; if (!this.target.interactive) this.setHit(false); if (name !== 'story') this.explodeLock = false; }
   setExplodeScroll(p) { this.explodeScroll = p; }
-  setHeroScroll(p) { this.heroScroll = p; }
+  setHeroScroll(p, px) { this.heroScroll = p; this.heroPx = px || 0; }
   setScrollVelocity(v) { this.scrollVel = v; }
   intro() { this.cur.scale = 0.001; this.cur.y = -1.4; this.burst = 1; }
   toss() { this.bounce = 1; this.burst = 1; document.dispatchEvent(new CustomEvent('bowl:toss')); }
@@ -268,9 +271,11 @@ export class SaladScene {
     const T = hasM ? { ...T0, ...T0.m, ofx: T0.m.ofx ?? T0.m.fx, ofy: T0.m.ofy ?? T0.m.fy } : T0;
     const fxScale = hasM ? 1 : (mob ? 0.55 : 1), sScale = hasM ? 1 : (mob ? 0.72 : 1);
 
-    const heroLift = (mob && this.poseName === 'hero') ? (this.heroScroll || 0) * this.viewH * 1.1 : 0;
+    const hp = (mob && this.poseName === 'hero') ? (this.heroScroll || 0) : 0;
+    // phones: the canvas is fixed, so lock the bowl to the page scroll while in the hero so it leaves with the hero copy
+    const heroLift = hp > 0 ? (this.heroPx / this.vh) * this.viewH : 0;
     c.x = lerp(c.x, T.fx * this.viewW * fxScale, k); c.y = lerp(c.y, T.fy * this.viewH + heroLift, k);
-    c.scale = lerp(c.scale, T.scale * sScale, k);
+    c.scale = lerp(c.scale, T.scale * sScale * (1 - 0.2 * hp), k);
     const exTarget = this.poseName === 'story' ? (this.explodeLock ? 1 : T.explode * this.explodeScroll) : T.explode;
     c.explode = lerp(c.explode, exTarget, 1 - Math.exp(-dt * 3.5));
     c.spread = lerp(c.spread, T.spread * (mob ? 0.75 : 1), k);
@@ -319,7 +324,7 @@ export class SaladScene {
         const show = c.labels * e * (c.explode > 0.2 ? 1 : 0);
         if (show > 0.02) {
           const p = new THREE.Vector3(L.s.position.x + L.side * (L.w * 0.5 + 0.18), L.s.position.y, L.s.position.z); this.root.localToWorld(p); p.project(this.camera);
-          const sx = (p.x * 0.5 + 0.5) * innerWidth, sy = (-p.y * 0.5 + 0.5) * innerHeight;
+          const sx = (p.x * 0.5 + 0.5) * this.vw, sy = (-p.y * 0.5 + 0.5) * this.vh;
           L.el.style.opacity = show; L.el.style.transform = `translate(${sx.toFixed(1)}px, ${sy.toFixed(1)}px) translate(${L.side > 0 ? '0' : '-100%'}, -50%)`;
         } else L.el.style.opacity = 0;
       }
@@ -343,7 +348,7 @@ export class SaladScene {
     for (const o of this.orbiters) {
       o.a += dt * T.speed * o.dir * (this.reduced ? 0.3 : 1);
       const r = o.r * c.spread;
-      const ox = Math.cos(o.a) * r, oz = Math.sin(o.a) * 0.5 * r + o.z, oy = o.y * c.spread * 0.75 + Math.sin(t * 0.7 + o.phase) * 0.12;
+      const ox = Math.cos(o.a) * r, oz = Math.sin(o.a) * 0.5 * r + o.z, oy = o.y * c.spread * (mob ? 0.42 : 0.75) + Math.sin(t * 0.7 + o.phase) * 0.12;
       const th = o.ht * Math.PI * 2;
       const hx = 16 * Math.pow(Math.sin(th), 3) * 0.15 * c.spread;
       const hy = (13 * Math.cos(th) - 5 * Math.cos(2 * th) - 2 * Math.cos(3 * th) - Math.cos(4 * th)) * 0.15 * c.spread + 0.2;
@@ -351,7 +356,7 @@ export class SaladScene {
       const x = c.x + (tx - c.x) * bf * over, y = c.y + (ty - c.y) * bf * over, z = lerp(0.6, tz, bf);
       o.s.position.set(x + mx * 0.25 * (1 + o.z * 0.5), y + my * 0.18 + bounceY * 0.25 * (1 + Math.sin(o.phase)), z);
       o.s.rotation.z = Math.sin(t * 0.4 + o.phase) * 0.18 + o.spin * t * 0.2 + (1 - bf) * 2.5 * o.dir;
-      o.s.scale.setScalar(Math.max(0.001, 0.78 * (1 + o.z * 0.08) * (0.25 + 0.75 * bf)));
+      o.s.scale.setScalar(Math.max(0.001, 0.78 * (1 + o.z * 0.08) * (0.25 + 0.75 * bf) * (1 - 0.95 * hp)));
     }
 
     this.renderer.render(this.scene, this.camera);
