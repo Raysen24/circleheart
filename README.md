@@ -14,7 +14,7 @@ Open http://localhost:5173.
 
 ## Live site
 
-https://circleheart.id — deployed automatically by GitHub Actions from the `main` branch of github.com/Raysen24/circleheart (GitHub Pages, custom domain via `public/CNAME`). Every push to `main` redeploys in about two minutes.
+https://circleheart.id — hosted on Vercel (project `circleheart` under raysen24's projects), deployed automatically from the `main` branch of github.com/Raysen24/circleheart. Every push to `main` redeploys in about a minute. DNS at Hostinger: A @ → 216.198.79.1, CNAME www → cname.vercel-dns.com (www redirects to the apex).
 
 ## Build for production
 
