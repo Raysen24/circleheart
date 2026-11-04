@@ -19,7 +19,7 @@ export async function mountDoodles() {
 /* ---------------- Menu ---------------- */
 const HOT = new Set(['Best seller', 'Premium', 'New menu']);
 const kcalBadge = (d) => d.kcal ? `<span class="dish__kcal">${d.kcal.length > 1 ? `wrap ${d.kcal[0]} · bowl ${d.kcal[1]}` : d.kcal[0]} kcal</span>` : '';
-const priceLabel = (d) => d.from ? `<span class="price price--from"><small>from</small> ${rupiah(d.from)}</span>` : `<span class="price">${rupiah(d.price)}</span>`;
+const priceLabel = (d) => (d.from || d.choice) ? `<span class="price price--from"><small>from</small> ${rupiah(d.from || d.price)}</span>` : `<span class="price">${rupiah(d.price)}</span>`;
 function dishCard(d, kind, { round = true } = {}) {
   const tagClass = HOT.has(d.tag) ? 'dish__tag is-hot' : 'dish__tag';
   const contain = d.contain.slice(0, 6).join(', ') + (d.contain.length > 6 ? '…' : '');
@@ -108,7 +108,7 @@ export function openModal(d, kind) {
   const w = $('#modalWrap'); if (d.wrap) { w.src = `/images/${d.wrap}.webp`; w.hidden = false; } else { w.hidden = true; }
   $('#modalTag').textContent = d.tag || (d.size ? d.size + ' size' : (kind === 'snacks' ? 'Snack' : kind === 'juss' ? 'Juss' : 'Salad'));
   $('#modalTitle').textContent = d.name + (d.size ? ` (${d.size})` : '');
-  $('#modalPrice').textContent = d.from ? `from ${rupiah(d.from)}` : rupiah(d.price);
+  $('#modalPrice').textContent = (d.from || d.choice) ? `from ${rupiah(d.from || d.price)}` : rupiah(d.price);
   $('#modalDesc').textContent = (d.kcal ? (d.kcal.length > 1 ? `Wrap ${d.kcal[0]} kcal · Bowl ${d.kcal[1]} kcal. ` : `${d.kcal[0]} kcal. `) : '') + d.desc;
   $('#modalContainHead').textContent = kind === 'juss' ? 'Made with' : kind === 'gifts' ? 'How it works' : 'Contain';
   $('#modalContain').innerHTML = d.contain.map(c => `<li>${c}</li>`).join('') + (d.bowlOnly ? d.bowlOnly.map(c => `<li class="alt">${c} (bowl only)</li>`).join('') : '');
@@ -277,7 +277,7 @@ export function initCursor() {
 export function initHeroPicker(scene) {
   const keys = ['all-in', 'supreme', 'big-omega', 'sawadee', 'baby-o', 'crunchy'];
   const root = $('#heroPicker'); if (!root) return;
-  root.innerHTML = keys.map((k, i) => { const d = SALADS.find(x => x.id === k); return `<button class="pick ${i === 0 ? 'is-active' : ''}" data-bowl="${k}"><img src="/images/${d.img}.webp" alt="" />${d.name}<small>${short(d.price)}</small></button>`; }).join('');
+  root.innerHTML = keys.map((k, i) => { const d = SALADS.find(x => x.id === k); return `<button class="pick ${i === 0 ? 'is-active' : ''}" data-bowl="${k}"><img src="/images/${d.img}.webp" alt="" />${d.name}<small>${d.choice ? 'from ' : ''}${short(d.price)}</small></button>`; }).join('');
   const dish = $('#heroDish');
   const apply = (k) => {
     const d = SALADS.find(x => x.id === k);
@@ -285,11 +285,15 @@ export function initHeroPicker(scene) {
     if (scene.bowlKey !== k) scene.setBowl(k);
     if (dish) {
       gsap.fromTo(dish, { y: 8, opacity: .4 }, { y: 0, opacity: 1, duration: .5, ease: 'power3.out' });
-      $('.hero__dish-name', dish).textContent = d.name; $('.hero__dish-price', dish).textContent = rupiah(d.price);
-      $('.hero__dish-order', dish).href = wa(`Halo Circle Heart! Saya mau pesan ${d.name} — ${rupiah(d.price)}.`);
+      // All In is a category: the price depends on the dressing, so show "from" and send people to the builder
+      $('.hero__dish-name', dish).textContent = d.name + (d.choice ? ' · choose your dressing' : '');
+      $('.hero__dish-price', dish).textContent = (d.choice ? 'from ' : '') + rupiah(d.price);
+      const order = $('.hero__dish-order', dish);
+      if (d.choice) { order.textContent = 'Build yours →'; order.href = '#builder'; order.removeAttribute('target'); }
+      else { order.textContent = 'Order this →'; order.href = wa(`Halo Circle Heart! Saya mau pesan ${d.name} — ${rupiah(d.price)}.`); order.setAttribute('target', '_blank'); }
     }
   };
   root.addEventListener('click', (e) => { const b = e.target.closest('.pick'); if (b) apply(b.dataset.bowl); });
   document.addEventListener('bowl:change', (e) => { const k = e.detail; if ($('.pick.is-active', root)?.dataset.bowl !== k) apply(k); });
-  $('.hero__dish-order')?.setAttribute('href', wa(`Halo Circle Heart! Saya mau pesan All In Salad — ${rupiah(ALL_IN.price)}.`));
+  apply(keys[0]);
 }

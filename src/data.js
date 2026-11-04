@@ -69,7 +69,7 @@ const ALL_IN_BOWL = ['Macaroni', 'Edamame', 'Crabstick'];
 // All In Salad, regular size. Rp 45.000 with any dressing; Cheesy Truffle Mayo Rp 55.000.
 export const ALL_IN = {
   id: 'all-in', name: 'All In Salad', price: 45000, img: 'all-in', wrap: 'all-in-wrap', tag: 'Build your own', size: 'Regular',
-  desc: 'Pick your meat and your dressing, and we pile on everything else. Eleven dressings to choose from.',
+  desc: 'A category, not one dish: pick your meat and one of eleven dressings. Rp 45.000 with any dressing, Rp 55.000 with Cheesy Truffle Mayo.',
   contain: ALL_IN_CONTAIN, bowlOnly: ALL_IN_BOWL, choice: true,
 };
 

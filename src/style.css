@@ -149,7 +149,7 @@ main, footer, .marquee, .nav { position: relative; z-index: 2; }
 .nav__logo img { height: 52px; width: auto; transition: height .35s; }
 .nav.is-scrolled .nav__logo img { height: 42px; }
 .nav__links { display: flex; gap: 1.6rem; margin-left: auto; font-weight: 700; }
-.nav__links a { position: relative; padding: .3rem 0; }
+.nav__links a { position: relative; padding: .3rem 0; white-space: nowrap; }
 .nav__links a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--green); transform: scaleX(0); transform-origin: left; transition: transform .3s; border-radius: 2px; }
 .nav__links a:hover::after, .nav__links a.is-active::after { transform: scaleX(1); }
 .nav__cta { padding: .6rem 1.2rem; }
