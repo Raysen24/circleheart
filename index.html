@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circle Heart Salad — Fresh salads, wraps & healthy catering in Makassar</title>
+  <meta name="description" content="Circle Heart Salad: signature salads in bowl or wrap, All In Salad with eleven house dressings, Juss cold-pressed juice, sandwiches, snacks, hampers and healthy catering. Jl. Cendrawasih 276 & Tamalanrea (BTP), Makassar." />
+  <meta name="theme-color" content="#6daf2a" />
+  <link rel="icon" href="/images/doodles/mini-logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&family=Anton&display=swap" rel="stylesheet" />
+  <script type="module" crossorigin src="/assets/index-5vLBJwzx.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-zd8ObhhV.css">
+</head>
+<body>
+  <!-- Preloader -->
+  <div id="loader" class="loader" aria-hidden="true">
+    <div class="loader__logo"><img src="/images/logo.svg" alt="" /></div>
+    <div class="loader__bar"><span></span></div>
+    <p class="loader__text">tossing your greens…</p>
+  </div>
+
+  <!-- Persistent 3D canvas -->
+  <div id="bg" class="bg" aria-hidden="true"><div class="bg__light"></div><div class="bg__yellow"></div><div class="bg__dark"></div></div>
+  <canvas id="scene" class="scene" aria-hidden="true"></canvas>
+  <div id="labels" class="labels" aria-hidden="true"></div>
+  <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span></div>
+
+  <!-- Navigation -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__logo" aria-label="Circle Heart Salad home"><img src="/images/logo.svg" alt="Circle Heart Salad" /></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="#menu">Menu</a>
+      <a href="#dressings">Dressings</a>
+      <a href="#builder">Build a Bowl</a>
+      <a href="#catering">Catering</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <div class="nav__social">
+      <a class="nav__icon" data-social="instagram" href="#" target="_blank" rel="noopener" aria-label="Circle Heart on Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/></svg></a>
+      <a class="nav__icon" data-social="tiktok" href="#" target="_blank" rel="noopener" aria-label="Circle Heart on TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 6.7a4.9 4.9 0 0 1-3.8-4.4V2h-3.5v14.1a3 3 0 1 1-2.1-2.9V9.6a6.5 6.5 0 1 0 5.6 6.4V8.8a8.3 8.3 0 0 0 4.8 1.5V6.8c-.3 0-.7 0-1-.1z"/></svg></a>
+    </div>
+    <a class="btn btn--primary nav__cta" id="navOrder" href="#" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.5 0 .2 5.3.2 11.8c0 2.1.5 4.1 1.6 5.9L0 24l6.4-1.7a11.8 11.8 0 0 0 5.6 1.4c6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.2-6.1-3.3-8.4zM12 21.7c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.8 1 1-3.7-.2-.4A9.8 9.8 0 0 1 2.2 11.8C2.2 6.4 6.6 2 12 2c2.6 0 5.1 1 6.9 2.9a9.7 9.7 0 0 1 2.9 6.9c0 5.4-4.4 9.9-9.8 9.9zm5.4-7.3c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-1 1.2-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+      Order
+    </a>
+    <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero section theme-dark" id="hero" data-pose="hero">
+      <div class="hero__content">
+        <p class="eyebrow reveal"><span class="eyebrow__dot"></span> Makassar's salad bar</p>
+        <h1 class="hero__title">
+          <span class="line"><span>Fresh.</span></span>
+          <span class="line"><span>Crunchy.</span></span>
+          <span class="line"><span class="accent">Made with</span> <span class="heart-word">heart<svg class="heart-word__icon" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.8 8.3 3 4.5 6.6 4.5c2 0 3.4 1 4.4 2.4 1-1.4 2.4-2.4 4.4-2.4 3.6 0 5.8 3.8 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg></span></span>
+        </h1>
+        <p class="hero__lead reveal">Sixteen signature salads in a bowl or a wrap, eleven house-made dressings, cold-pressed Juss, and a healthy catering plan that lands at your door. No MSG, no trans fat, low salt, low sugar.</p>
+        <div class="hero__dish reveal" id="heroDish"><span class="hero__dish-name">All In Salad · choose your dressing</span><span class="hero__dish-price">from Rp 45.000</span><a href="#builder" class="hero__dish-order">Build yours →</a></div>
+        <div class="hero__actions reveal">
+          <a href="#menu" class="btn btn--primary btn--lg">Explore the menu</a>
+          <a href="#builder" class="btn btn--ghost btn--lg">Build your bowl</a>
+        </div>
+        <div class="hero__delivery reveal" id="heroDelivery"></div>
+        <ul class="hero__stats reveal">
+          <li><strong data-count="16">0</strong><span>signature salads</span></li>
+          <li><strong data-count="11">0</strong><span>house dressings</span></li>
+          <li><strong data-count="2">0</strong><span>Makassar outlets</span></li>
+        </ul>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <div class="hero__hint">drag &amp; click the bowl</div>
+      </div>
+      <div class="hero__picker" id="heroPicker" aria-label="Pick a signature bowl"></div>
+      <a href="#story" class="scroll-cue" aria-label="Scroll down"><span></span></a>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marqueeTrack">
+        <span>No MSG</span><i class="dd" data-icon="leaf"></i>
+        <span>No trans fat</span><i class="dd" data-icon="carrot"></i>
+        <span>Low salt</span><i class="dd" data-icon="corn"></i>
+        <span>Low sugar</span><i class="dd" data-icon="fish"></i>
+        <span>Fresh every day</span><i class="dd" data-icon="bowl"></i>
+        <span>Bowl or wrap</span><i class="dd" data-icon="bread"></i>
+      </div>
+    </div>
+
+    <!-- STORY -->
+    <section class="story section" id="story" data-pose="story">
+      <div class="container">
+        <div class="story__grid">
+          <div class="story__text">
+            <p class="eyebrow reveal">Why Circle Heart</p>
+            <h2 class="h2 reveal">A salad you'll actually <em>crave</em>.</h2>
+            <p class="reveal">Every bowl is built to order on a bed of mixed greens, loaded with real toppings and finished with a dressing we make ourselves. Keep scrolling, or click the bowl, to see what goes into our All In Salad, layer by layer.</p>
+            <div class="story__note reveal"><img src="/images/mascot-kid.webp" alt="" /><span class="hand">eat your greens, happily</span></div>
+          </div>
+          <div class="story__stage" aria-hidden="true"></div>
+        </div>
+        <div class="story__cards">
+          <article class="tilt card card--feature reveal">
+            <i class="dd dd--lg" data-icon="leaf"></i>
+            <h3>Fresh greens, daily</h3>
+            <p>Crisp lettuce, red and white cabbage, cucumber and tomatoes prepped every morning.</p>
+          </article>
+          <article class="tilt card card--feature reveal">
+            <i class="dd dd--lg" data-icon="drumstick"></i>
+            <h3>Choose your protein</h3>
+            <p>Grilled or Shilin chicken, smoked beef, patty, tuna, spicy lime shrimp, torched salmon or edamame.</p>
+          </article>
+          <article class="tilt card card--feature reveal">
+            <i class="dd dd--lg" data-icon="bowl-top"></i>
+            <h3>Eleven house dressings</h3>
+            <p>From Caesar King to Cheesy Truffle Mayo, all made in our kitchen.</p>
+          </article>
+          <article class="tilt card card--feature reveal">
+            <i class="dd dd--lg" data-icon="bread"></i>
+            <h3>Bowl or wrap</h3>
+            <p>Same salad, two ways. Eat in with a fork or roll it up and take it anywhere.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU -->
+    <section class="menu section" id="menu" data-pose="menu">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow reveal">The menu</p>
+          <h2 class="h2 display reveal">The Lineup</h2>
+          <p class="reveal">Signature salads wrapped or in a bowl, All In with eleven dressings, cold-pressed Juss, sandwiches, snacks and gift hampers. Tap any item to see everything inside it.</p>
+        </div>
+        <div class="tabs reveal" role="tablist" id="menuTabs">
+          <button class="tab is-active" role="tab" data-tab="salads">Signature Salads</button>
+          <button class="tab" role="tab" data-tab="allin">All In</button>
+          <button class="tab" role="tab" data-tab="medium">Medium Size</button>
+          <button class="tab" role="tab" data-tab="juss">Juss</button>
+          <button class="tab" role="tab" data-tab="snacks">Sandwich &amp; Snacks</button>
+          <button class="tab" role="tab" data-tab="gifts">Hampers &amp; Cake</button>
+          <button class="tab" role="tab" data-tab="extras">Add-ons</button>
+        </div>
+        <div class="menu__panel" id="menuPanel"></div>
+      </div>
+    </section>
+
+    <!-- DRESSINGS -->
+    <section class="dressings section theme-dark" id="dressings" data-pose="dressings">
+      <div class="dressings__pin" id="dressingsPin">
+        <div class="container dressings__head">
+          <p class="eyebrow">House-made</p>
+          <h2 class="h2 display">Salad Dressing</h2>
+          <p>Eleven flavours made in our kitchen. Hover a cup to pour it over the bowl.</p>
+        </div>
+        <div class="dressings__track" id="dressingsTrack"></div>
+      </div>
+    </section>
+
+    <!-- BUILDER -->
+    <section class="builder section theme-dark" id="builder" data-pose="builder">
+      <div class="container builder__grid">
+        <div class="builder__panel">
+          <p class="eyebrow reveal">Interactive</p>
+          <h2 class="h2 display reveal">Build Your Bowl</h2>
+          <p class="reveal">Start from the All In Salad and make it yours. Watch your bowl change as you pick.</p>
+
+          <div class="builder__step reveal">
+            <h4><span>1</span> Style</h4>
+            <div class="chips" id="styleChips">
+              <button class="chip is-active" data-style="bowl">Bowl</button>
+              <button class="chip" data-style="wrap">Wrap</button>
+            </div>
+          </div>
+          <div class="builder__step reveal">
+            <h4><span>2</span> Choice of meat</h4>
+            <div class="chips" id="meatChips"></div>
+          </div>
+          <div class="builder__step reveal">
+            <h4><span>3</span> Choice of dressing</h4>
+            <div class="chips chips--dots" id="dressingChips"></div>
+          </div>
+          <div class="builder__step reveal">
+            <h4><span>4</span> Extra toppings</h4>
+            <div class="chips" id="extraChips"></div>
+          </div>
+        </div>
+        <div class="builder__stage">
+          <div class="builder__summary tilt" id="builderSummary">
+            <div class="builder__summary-top">
+              <div>
+                <p class="eyebrow">Your bowl</p>
+                <h3 id="sumTitle">All In Salad</h3>
+              </div>
+              <div class="price" id="sumPrice">Rp 40.000</div>
+            </div>
+            <ul class="builder__lines" id="sumLines"></ul>
+            <a class="btn btn--primary btn--block" id="sumOrder" href="#" target="_blank" rel="noopener">Order this via WhatsApp</a>
+            <p class="builder__fine">Base: All In Salad with mix greens, crabstick, edamame, tomatoes, cucumber, macaroni, corn, onions, eggs, carrots, red cabbage, smoked beef, almond &amp; sunflower seeds.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATERING -->
+    <section class="catering section theme-yellow" id="catering" data-pose="catering">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow reveal">Healthy catering</p>
+          <h2 class="h2 display reveal">Catering Package</h2>
+          <p class="reveal">A different healthy menu every weekday, max 400–500 calories, delivered to your door in Makassar.</p>
+        </div>
+
+        <div class="catering__toggles reveal">
+          <div class="catering__toggle" id="cateringToggle">
+            <button class="is-active" data-plan="both">Lunch &amp; Dinner</button>
+            <button data-plan="one">Lunch <em>or</em> Dinner</button>
+            <span class="catering__thumb"></span>
+          </div>
+          <div class="catering__toggle catering__toggle--juss" id="jussToggle">
+            <button class="is-active" data-juss="0">Catering only</button>
+            <button data-juss="1">+ Juss</button>
+            <button data-juss="2">+ Double Juss</button>
+            <span class="catering__thumb"></span>
+          </div>
+        </div>
+
+        <div class="catering__plans" id="cateringPlans"></div>
+
+        <div class="catering__bottom">
+          <article class="family tilt reveal">
+            <div class="family__text">
+              <p class="eyebrow">Bundle package</p>
+              <h3>Catering + Juss</h3>
+              <p>Pair your daily healthy meal with a bottle of freshly made, cold-pressed Juss. No sugar, no water added. Pick a plan above, switch on Juss, and the bundle price updates.</p>
+              <a class="btn btn--primary" id="cateringOrder" href="#" target="_blank" rel="noopener">Ask about catering on WhatsApp</a>
+            </div>
+            <img class="family__img family__img--photo" src="/images/catering-lunch.webp" alt="Circle Heart healthy catering meal box" />
+          </article>
+          <aside class="notes reveal">
+            <h4>Good to know</h4>
+            <ul id="cateringNotes"></ul>
+            <img class="notes__scooter" id="scooter" src="/images/scooter.webp" alt="" />
+          </aside>
+        </div>
+        <img class="catering__deco catering__deco--gym" src="/images/gym.webp" alt="" aria-hidden="true" />
+        <img class="catering__deco catering__deco--eat" src="/images/eating.webp" alt="" aria-hidden="true" />
+      </div>
+    </section>
+
+    <!-- VISIT -->
+    <section class="visit section" id="visit" data-pose="visit">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow reveal">Find us</p>
+          <h2 class="h2 display reveal">Come say hi</h2>
+          <p class="reveal">Two outlets in Makassar. Order ahead on WhatsApp and we'll have it ready.</p>
+        </div>
+        <div class="visit__grid" id="locations"></div>
+        <div class="visit__cta reveal">
+          <img class="visit__cta-photo" src="/images/section-pour.webp" alt="Dressing poured over a Circle Heart salad" />
+          <div>
+            <h3>Order now, eat happy.</h3>
+            <p>We reply fast on WhatsApp, and deliver through GrabFood and GoFood. Follow <a id="igLink" href="#" target="_blank" rel="noopener">@circle.heart.id</a> on Instagram and TikTok for today's specials.</p>
+            <div class="visit__buttons">
+              <a class="btn btn--primary btn--lg" id="visitOrder" href="#" target="_blank" rel="noopener">WhatsApp 0821-9489-5838</a>
+              <a class="btn btn--ghost btn--lg btn--icon" id="visitIg" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/></svg> Instagram</a>
+              <a class="btn btn--ghost btn--lg btn--icon" id="visitTt" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 6.7a4.9 4.9 0 0 1-3.8-4.4V2h-3.5v14.1a3 3 0 1 1-2.1-2.9V9.6a6.5 6.5 0 1 0 5.6 6.4V8.8a8.3 8.3 0 0 0 4.8 1.5V6.8c-.3 0-.7 0-1-.1z"/></svg> TikTok</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <img class="footer__logo" src="/images/logo.svg" alt="Circle Heart Salad" />
+      <p>Jl. Cendrawasih No. 276 · Jl. Tamalanrea Raya Blok M No. 1 (BTP) · Makassar</p>
+      <div class="footer__social" id="footerSocial">
+        <a data-social="instagram" href="#" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/></svg></a>
+        <a data-social="tiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 6.7a4.9 4.9 0 0 1-3.8-4.4V2h-3.5v14.1a3 3 0 1 1-2.1-2.9V9.6a6.5 6.5 0 1 0 5.6 6.4V8.8a8.3 8.3 0 0 0 4.8 1.5V6.8c-.3 0-.7 0-1-.1z"/></svg></a>
+      </div>
+      <p class="footer__copy">© <span id="year"></span> Circle Heart Salad. Made with <span class="heart">♥</span> and a lot of greens.</p>
+    </div>
+  </footer>
+
+  <!-- Dish modal -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal__close" data-close aria-label="Close">×</button>
+      <div class="modal__media">
+        <img id="modalImg" src="" alt="" />
+        <img id="modalWrap" class="modal__wrap" src="" alt="" />
+      </div>
+      <div class="modal__body">
+        <p class="eyebrow" id="modalTag"></p>
+        <h3 id="modalTitle"></h3>
+        <div class="price" id="modalPrice"></div>
+        <p id="modalDesc"></p>
+        <h4 id="modalContainHead">Contain</h4>
+        <ul class="ingredients" id="modalContain"></ul>
+        <div id="modalChoice" class="modal__choice"></div>
+        <a class="btn btn--primary btn--block" id="modalOrder" href="#" target="_blank" rel="noopener">Order via WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
