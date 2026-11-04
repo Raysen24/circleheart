@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Circle Heart Salad — Fresh salads, wraps & healthy catering in Makassar</title>
-  <meta name="description" content="Circle Heart Salad: 13 signature salads in bowl or wrap, 10 house dressings, snacks and healthy daily catering. Jl. Cendrawasih 276 & MR Food Court Tamalanrea, Makassar." />
+  <meta name="description" content="Circle Heart Salad: signature salads in bowl or wrap, All In Salad with eleven house dressings, Juss cold-pressed juice, sandwiches, snacks, hampers and healthy catering. Jl. Cendrawasih 276 & Tamalanrea (BTP), Makassar." />
   <meta name="theme-color" content="#6daf2a" />
   <link rel="icon" href="/images/doodles/mini-logo.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -57,16 +57,16 @@
           <span class="line"><span>Crunchy.</span></span>
           <span class="line"><span class="accent">Made with</span> <span class="heart-word">heart<svg class="heart-word__icon" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.8 8.3 3 4.5 6.6 4.5c2 0 3.4 1 4.4 2.4 1-1.4 2.4-2.4 4.4-2.4 3.6 0 5.8 3.8 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg></span></span>
         </h1>
-        <p class="hero__lead reveal">Thirteen signature salads in a bowl or a wrap, ten house-made dressings, and a healthy catering plan that lands at your door. No MSG, no trans fat, low salt, low sugar.</p>
-        <div class="hero__dish reveal" id="heroDish"><span class="hero__dish-name">All In Salad</span><span class="hero__dish-price">Rp 40.000</span><a href="#" target="_blank" rel="noopener" class="hero__dish-order">Order this →</a></div>
+        <p class="hero__lead reveal">Sixteen signature salads in a bowl or a wrap, eleven house-made dressings, cold-pressed Juss, and a healthy catering plan that lands at your door. No MSG, no trans fat, low salt, low sugar.</p>
+        <div class="hero__dish reveal" id="heroDish"><span class="hero__dish-name">All In Salad</span><span class="hero__dish-price">Rp 45.000</span><a href="#" target="_blank" rel="noopener" class="hero__dish-order">Order this →</a></div>
         <div class="hero__actions reveal">
           <a href="#menu" class="btn btn--primary btn--lg">Explore the menu</a>
           <a href="#builder" class="btn btn--ghost btn--lg">Build your bowl</a>
         </div>
         <div class="hero__delivery reveal" id="heroDelivery"></div>
         <ul class="hero__stats reveal">
-          <li><strong data-count="13">0</strong><span>signature salads</span></li>
-          <li><strong data-count="10">0</strong><span>house dressings</span></li>
+          <li><strong data-count="16">0</strong><span>signature salads</span></li>
+          <li><strong data-count="11">0</strong><span>house dressings</span></li>
           <li><strong data-count="2">0</strong><span>Makassar outlets</span></li>
         </ul>
       </div>
@@ -114,8 +114,8 @@
           </article>
           <article class="tilt card card--feature reveal">
             <i class="dd dd--lg" data-icon="bowl-top"></i>
-            <h3>Ten house dressings</h3>
-            <p>From Caesar King to Gochujang Vinaigrette, all made in our kitchen.</p>
+            <h3>Eleven house dressings</h3>
+            <p>From Caesar King to Cheesy Truffle Mayo, all made in our kitchen.</p>
           </article>
           <article class="tilt card card--feature reveal">
             <i class="dd dd--lg" data-icon="bread"></i>
@@ -132,12 +132,15 @@
         <div class="section-head">
           <p class="eyebrow reveal">The menu</p>
           <h2 class="h2 display reveal">The Lineup</h2>
-          <p class="reveal">Thirteen signature salads, wrapped or in a bowl. Tap any dish to see everything inside it.</p>
+          <p class="reveal">Signature salads wrapped or in a bowl, All In with eleven dressings, cold-pressed Juss, sandwiches, snacks and gift hampers. Tap any item to see everything inside it.</p>
         </div>
         <div class="tabs reveal" role="tablist" id="menuTabs">
           <button class="tab is-active" role="tab" data-tab="salads">Signature Salads</button>
+          <button class="tab" role="tab" data-tab="allin">All In</button>
           <button class="tab" role="tab" data-tab="medium">Medium Size</button>
-          <button class="tab" role="tab" data-tab="snacks">Snacks</button>
+          <button class="tab" role="tab" data-tab="juss">Juss</button>
+          <button class="tab" role="tab" data-tab="snacks">Sandwich &amp; Snacks</button>
+          <button class="tab" role="tab" data-tab="gifts">Hampers &amp; Cake</button>
           <button class="tab" role="tab" data-tab="extras">Add-ons</button>
         </div>
         <div class="menu__panel" id="menuPanel"></div>
@@ -150,7 +153,7 @@
         <div class="container dressings__head">
           <p class="eyebrow">House-made</p>
           <h2 class="h2 display">Salad Dressing</h2>
-          <p>Ten flavours made in our kitchen. Hover a cup to pour it over the bowl.</p>
+          <p>Eleven flavours made in our kitchen. Hover a cup to pour it over the bowl.</p>
         </div>
         <div class="dressings__track" id="dressingsTrack"></div>
       </div>
@@ -210,10 +213,18 @@
           <p class="reveal">A different healthy menu every weekday, max 400–500 calories, delivered to your door in Makassar.</p>
         </div>
 
-        <div class="catering__toggle reveal" id="cateringToggle">
-          <button class="is-active" data-plan="both">Lunch &amp; Dinner</button>
-          <button data-plan="one">Lunch <em>or</em> Dinner</button>
-          <span class="catering__thumb"></span>
+        <div class="catering__toggles reveal">
+          <div class="catering__toggle" id="cateringToggle">
+            <button class="is-active" data-plan="both">Lunch &amp; Dinner</button>
+            <button data-plan="one">Lunch <em>or</em> Dinner</button>
+            <span class="catering__thumb"></span>
+          </div>
+          <div class="catering__toggle catering__toggle--juss" id="jussToggle">
+            <button class="is-active" data-juss="0">Catering only</button>
+            <button data-juss="1">+ Juss</button>
+            <button data-juss="2">+ Double Juss</button>
+            <span class="catering__thumb"></span>
+          </div>
         </div>
 
         <div class="catering__plans" id="cateringPlans"></div>
@@ -221,12 +232,12 @@
         <div class="catering__bottom">
           <article class="family tilt reveal">
             <div class="family__text">
-              <p class="eyebrow">For the family</p>
-              <h3>Family Catering</h3>
-              <p>3 menu per day, enough for 2–3 persons. No MSG, no trans fat, low salt, low sugar.</p>
-              <ul class="family__plans" id="familyPlans"></ul>
+              <p class="eyebrow">Bundle package</p>
+              <h3>Catering + Juss</h3>
+              <p>Pair your daily healthy meal with a bottle of freshly made, cold-pressed Juss. No sugar, no water added. Pick a plan above, switch on Juss, and the bundle price updates.</p>
+              <a class="btn btn--primary" id="cateringOrder" href="#" target="_blank" rel="noopener">Ask about catering on WhatsApp</a>
             </div>
-            <img class="family__img family__img--photo" src="/images/catering-box.webp" alt="Circle Heart healthy catering meal box" />
+            <img class="family__img family__img--photo" src="/images/catering-lunch.webp" alt="Circle Heart healthy catering meal box" />
           </article>
           <aside class="notes reveal">
             <h4>Good to know</h4>
@@ -267,7 +278,7 @@
   <footer class="footer">
     <div class="container footer__grid">
       <img class="footer__logo" src="/images/logo.svg" alt="Circle Heart Salad" />
-      <p>Jl. Cendrawasih No. 276 · Jl. Tamalanrea Raya Blok M No. 1, MR Food Court · Makassar</p>
+      <p>Jl. Cendrawasih No. 276 · Jl. Tamalanrea Raya Blok M No. 1 (BTP) · Makassar</p>
       <div class="footer__social" id="footerSocial">
         <a data-social="instagram" href="#" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/></svg></a>
         <a data-social="tiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 6.7a4.9 4.9 0 0 1-3.8-4.4V2h-3.5v14.1a3 3 0 1 1-2.1-2.9V9.6a6.5 6.5 0 1 0 5.6 6.4V8.8a8.3 8.3 0 0 0 4.8 1.5V6.8c-.3 0-.7 0-1-.1z"/></svg></a>
@@ -290,7 +301,7 @@
         <h3 id="modalTitle"></h3>
         <div class="price" id="modalPrice"></div>
         <p id="modalDesc"></p>
-        <h4>Contain</h4>
+        <h4 id="modalContainHead">Contain</h4>
         <ul class="ingredients" id="modalContain"></ul>
         <div id="modalChoice" class="modal__choice"></div>
         <a class="btn btn--primary btn--block" id="modalOrder" href="#" target="_blank" rel="noopener">Order via WhatsApp</a>

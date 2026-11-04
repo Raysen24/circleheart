@@ -129,7 +129,7 @@ em { font-style: normal; color: var(--orange); }
 .lbl--r i::after { left: -5px; }
 .lbl--l { flex-direction: row-reverse; }
 .lbl--l i::after { right: -5px; }
-@media (max-width: 720px) { .lbl i { width: 18px; } .lbl span { font-size: .75rem; padding: .25rem .6rem; } }
+@media (max-width: 1024px) { .lbl i { width: 14px; } .lbl span { font-size: .72rem; padding: .22rem .55rem; } }
 
 /* 3D canvas */
 .scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
@@ -237,6 +237,27 @@ main, footer, .marquee, .nav { position: relative; z-index: 2; }
 .extras li span:last-child { color: var(--red); font-family: var(--font-display); font-weight: 700; }
 .extras li:last-child { border: 0; }
 
+/* Menu extras: kcal, tall cards, All In panel, dressing cards */
+.dish__kcal { display: inline-block; font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--green-deep); background: var(--green-soft); padding: .25rem .6rem; border-radius: 99px; width: fit-content; position: relative; }
+.price--from small { font-size: .7rem; font-weight: 800; color: var(--muted); margin-right: .2rem; text-transform: uppercase; letter-spacing: .06em; }
+.dish--tall .dish__media { width: 100%; aspect-ratio: 4 / 5; }
+.dish--tall .dish__img { border-radius: 20px; }
+.menu__grid--wide { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
+.allin__hero { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 2rem; align-items: center; margin-bottom: 2rem; }
+.allin__copy h3 { font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--green); margin-bottom: .6rem; }
+.allin__copy p { color: var(--muted); }
+.allin__meats { font-size: .9rem; }
+.allin__meats b { color: var(--green-deep); }
+.menu__grid--dressings { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.dcard { position: relative; display: grid; grid-template-columns: 92px 1fr; gap: 1rem; align-items: center; background: #fff; border-radius: 22px; padding: 1rem; box-shadow: var(--shadow); border: 1px solid rgba(79,114,61,.08); }
+.dcard img { width: 92px; height: 92px; border-radius: 50%; object-fit: cover; box-shadow: 0 12px 24px -12px rgba(0,0,0,.4); }
+.dcard h4 { font-size: 1.05rem; color: var(--green); margin-bottom: .2rem; }
+.dcard p { font-size: .8rem; color: var(--muted); margin: 0 0 .4rem; line-height: 1.45; }
+.dcard .price { font-size: 1rem; }
+.dcard .dish__tag { top: .7rem; left: auto; right: .7rem; }
+.card--note p { color: var(--muted); font-size: .92rem; }
+@media (max-width: 720px) { .allin__hero { grid-template-columns: 1fr; } .menu__grid--wide { grid-template-columns: 1fr; } }
+
 /* Dressings */
 .dressings { padding: 0; }
 .dressings__pin { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; gap: 2rem; padding: var(--nav-h) 0 2rem; overflow: hidden; }
@@ -279,6 +300,11 @@ main, footer, .marquee, .nav { position: relative; z-index: 2; }
 .catering__toggle button.is-active { color: #fff; }
 .catering__toggle button em { color: inherit; font-style: italic; }
 .catering__thumb { position: absolute; top: .35rem; bottom: .35rem; left: .35rem; width: 50%; background: var(--green); border-radius: 999px; transition: transform .4s cubic-bezier(.2,.8,.2,1), width .4s; }
+.catering__toggles { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin-bottom: 2rem; }
+.catering__toggles .catering__toggle { margin: 0; }
+.catering__toggle button[hidden] { display: none; }
+.plan__juss { display: block; margin-top: .4rem; font-size: .78rem; font-weight: 800; color: var(--green-deep); }
+.plan__juss--muted { color: var(--muted); }
 .catering__plans { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; perspective: 1200px; }
 .catering { overflow: hidden; }
 .plan { background: #fff; border-radius: var(--radius); padding: 1.6rem; box-shadow: var(--shadow); text-align: center; position: relative; overflow: hidden; }
@@ -293,6 +319,7 @@ main, footer, .marquee, .nav { position: relative; z-index: 2; }
 .family .eyebrow { color: var(--yellow); }
 .family h3 { font-size: 1.8rem; margin-bottom: .5rem; }
 .family p { color: rgba(255,255,255,.8); }
+.family .btn { margin-top: .6rem; }
 .family__plans { display: grid; gap: .4rem; margin-top: 1rem; }
 .family__plans li { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,.25); padding: .4rem 0; font-weight: 700; }
 .family__plans li span:last-child { font-family: var(--font-display); color: var(--yellow); }
@@ -429,7 +456,7 @@ html[data-theme="yellow"] .nav:not(.is-scrolled) .nav__cta { background: var(--i
   .hero__actions { justify-content: center; }
   .story__grid, .builder__grid, .catering__bottom, .visit__grid { grid-template-columns: 1fr; }
   .story__grid { min-height: 0; }
-  .story__stage { min-height: 60vh; }
+  .story__stage { min-height: 72vh; }
   .story__cards { grid-template-columns: 1fr 1fr; }
   .builder__stage { position: relative; top: 0; min-height: 0; }
   .catering__plans { grid-template-columns: 1fr 1fr; }

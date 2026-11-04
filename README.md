@@ -31,7 +31,7 @@ The static site is output to `dist/`. Upload that folder to any static host
 | --- | --- |
 | `index.html` | Page structure: hero, story, menu, dressings, bowl builder, catering, visit, footer, dish modal |
 | `src/style.css` | Brand styling (lime green / brick red / orange / yellow on off-white with the doodle pattern) |
-| `src/data.js` | **All menu content.** Edit prices, ingredients, dressings, catering plans, phone number and addresses here |
+| `src/data.js` | **All menu content**, transcribed from the Google Sheet (menu, All In dressings, Juss, sandwiches & snacks, hampers, toppings, catering bundles). Edit prices, ingredients, phone number and addresses here |
 | `src/scene.js` | Three.js photo-layer engine: the real bowl photo plus real ingredient cutouts placed in 3D space, exploded view with labels, builder stacking, dressing pour, floating ingredients, per-section poses |
 | `src/ui.js` | Menu tabs and cards, modal, dressings strip, bowl builder, catering toggle, tilt cards, cursor |
 | `src/main.js` | Boot sequence, smooth scroll (Lenis), GSAP ScrollTrigger animations, section to 3D pose mapping |
@@ -40,7 +40,7 @@ The static site is output to `dist/`. Upload that folder to any static host
 
 ## Editing content
 
-* **Prices / ingredients / new dishes:** `src/data.js` → `SALADS`, `MEDIUM`, `SNACKS`, `EXTRAS`.
+* **Prices / ingredients / new dishes:** `src/data.js` → `SALADS`, `ALL_IN`, `DRESSINGS`, `MEDIUM`, `JUSS`, `SNACKS`, `GIFTS`, `EXTRAS`, `CATERING` (mirrors the Google Sheet at docs.google.com/spreadsheets/d/1E7vGMg7-LUzinSM1uEDnPj4xWpFkz6p_juPkNpPtjZA).
 * **WhatsApp number:** `WHATSAPP` in `src/data.js` (international format, no `+`).
 * **Instagram handle:** `INSTAGRAM` in `src/data.js`.
 * **Outlet addresses / map links:** `LOCATIONS` in `src/data.js`.

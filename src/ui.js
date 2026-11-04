@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { SALADS, MEDIUM, SNACKS, EXTRAS, DRESSINGS, MEATS, BUILDER_EXTRAS, CATERING, LOCATIONS, WHATSAPP, INSTAGRAM, SOCIAL, rupiah, short } from './data.js';
+import { SALADS, ALL_IN, MEDIUM, JUSS, SNACKS, GIFTS, EXTRAS, DRESSINGS, MEATS, BUILDER_EXTRAS, CATERING, LOCATIONS, WHATSAPP, INSTAGRAM, SOCIAL, rupiah, short } from './data.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -17,46 +17,74 @@ export async function mountDoodles() {
 }
 
 /* ---------------- Menu ---------------- */
-function dishCard(d, kind) {
-  const tagClass = d.tag === 'Best seller' || d.tag === 'Premium' ? 'dish__tag is-hot' : 'dish__tag';
+const HOT = new Set(['Best seller', 'Premium', 'New menu']);
+const kcalBadge = (d) => d.kcal ? `<span class="dish__kcal">${d.kcal.length > 1 ? `wrap ${d.kcal[0]} · bowl ${d.kcal[1]}` : d.kcal[0]} kcal</span>` : '';
+const priceLabel = (d) => d.from ? `<span class="price price--from"><small>from</small> ${rupiah(d.from)}</span>` : `<span class="price">${rupiah(d.price)}</span>`;
+function dishCard(d, kind, { round = true } = {}) {
+  const tagClass = HOT.has(d.tag) ? 'dish__tag is-hot' : 'dish__tag';
   const contain = d.contain.slice(0, 6).join(', ') + (d.contain.length > 6 ? '…' : '');
   return `
-  <button class="dish tilt" data-kind="${kind}" data-id="${d.id}" aria-label="${d.name} details">
+  <button class="dish tilt ${round ? '' : 'dish--tall'}" data-kind="${kind}" data-id="${d.id}" aria-label="${d.name} details">
     ${d.tag || d.size ? `<span class="${tagClass}">${d.tag || d.size}</span>` : ''}
     <div class="dish__media">
       <img class="dish__img" src="/images/${d.img}.webp" alt="${d.name}" loading="lazy" />
       ${d.wrap ? `<img class="dish__wrap" src="/images/${d.wrap}.webp" alt="" loading="lazy" />` : ''}
     </div>
-    <div class="dish__head"><h3>${d.name}</h3><span class="price">${rupiah(d.price)}</span></div>
+    <div class="dish__head"><h3>${d.name}</h3>${priceLabel(d)}</div>
+    ${kcalBadge(d)}
     <p class="dish__desc">${d.desc}</p>
-    <p class="dish__contain"><b>Contain:</b> ${contain}</p>
-    <span class="dish__more">See everything inside →</span>
+    <p class="dish__contain"><b>${kind === 'juss' ? 'Made with' : 'Contain'}:</b> ${contain}</p>
+    <span class="dish__more">${d.from ? 'Order by WhatsApp →' : 'See everything inside →'}</span>
   </button>`;
+}
+
+function allInPanel() {
+  return `<div class="allin">
+    <div class="allin__hero">
+      ${dishCard(ALL_IN, 'salads')}
+      <div class="allin__copy">
+        <p class="eyebrow">All In Salad · Regular size</p>
+        <h3>One salad, your way.</h3>
+        <p>Everything in the bowl, then your choice of meat and one of eleven house dressings. ${rupiah(ALL_IN.price)} with any dressing, ${rupiah(ALL_IN.price + 10000)} with Cheesy Truffle Mayo.</p>
+        <p class="allin__meats"><b>Choice of meat:</b> ${MEATS.map(m => m.name + (m.extra ? ` (+${short(m.extra)})` : '')).join(', ')}.</p>
+      </div>
+    </div>
+    <div class="menu__grid menu__grid--dressings">${DRESSINGS.map(d => `
+      <article class="dcard tilt">
+        ${d.tag ? `<span class="dish__tag ${d.tag === 'New' ? 'is-hot' : ''}">${d.tag}</span>` : ''}
+        <img src="/images/${d.img}.webp" alt="${d.name}" loading="lazy" />
+        <div><h4>${d.name}</h4><p>${d.note}</p><span class="price">${rupiah(ALL_IN.price + d.extra)}</span></div>
+      </article>`).join('')}</div>
+  </div>`;
 }
 
 function extrasPanel() {
   const list = (rows) => `<ul>${rows.map(([n, p]) => `<li><span>${n}</span><span>${short(p)}</span></li>`).join('')}</ul>`;
+  const half = Math.ceil(EXTRAS.ingredients.length / 2);
   return `<div class="extras">
-    <article class="card tilt"><h3>Extra Ingredients</h3>${list(EXTRAS.ingredients)}</article>
-    <article class="card tilt"><h3>Extra Meat</h3>${list(EXTRAS.meat)}</article>
-    <article class="card tilt"><h3>Extra Dressing <small style="color:var(--muted);font-size:.8rem;font-weight:700">(8k each)</small></h3>${list(EXTRAS.dressing)}</article>
+    <article class="card tilt"><h3>Additional toppings</h3>${list(EXTRAS.ingredients.slice(0, half))}</article>
+    <article class="card tilt"><h3>&nbsp;</h3>${list(EXTRAS.ingredients.slice(half))}</article>
+    <article class="card tilt card--note"><h3>Choice of meat</h3><p>All In, Medium All In, Bibim-cha and the sandwiches come with your choice of meat: ${MEATS.map(m => m.name).join(', ')}.</p><p>Spicy Lime Shrimp +${short(10000)} · Torched Baked Salmon +${short(30000)}.</p></article>
   </div>`;
 }
 
 const PANELS = {
-  salads: () => `<div class="menu__grid">${SALADS.map(d => dishCard(d, 'salads')).join('')}</div>`,
+  salads: () => `<div class="menu__grid">${SALADS.filter(d => d.id !== 'all-in').map(d => dishCard(d, 'salads')).join('')}</div>`,
+  allin: allInPanel,
   medium: () => `<div class="menu__grid">${MEDIUM.map(d => dishCard(d, 'medium')).join('')}</div>`,
+  juss: () => `<div class="menu__grid">${JUSS.map(d => dishCard(d, 'juss', { round: false })).join('')}</div>`,
   snacks: () => `<div class="menu__grid">${SNACKS.map(d => dishCard(d, 'snacks')).join('')}</div>`,
+  gifts: () => `<div class="menu__grid menu__grid--wide">${GIFTS.map(d => dishCard(d, 'gifts', { round: false })).join('')}</div>`,
   extras: extrasPanel,
 };
-const FIND = { salads: SALADS, medium: MEDIUM, snacks: SNACKS };
+const FIND = { salads: SALADS, medium: MEDIUM, snacks: SNACKS, juss: JUSS, gifts: GIFTS };
 
 export function initMenu({ onRender }) {
   const panel = $('#menuPanel');
   const render = (tab) => {
     panel.innerHTML = PANELS[tab]();
-    const items = $$('.dish, .extras .card', panel);
-    gsap.fromTo(items, { y: 40, opacity: 0, rotateX: -8 }, { y: 0, opacity: 1, rotateX: 0, duration: .7, stagger: .06, ease: 'power3.out', clearProps: 'transform' });
+    const items = $$('.dish, .extras .card, .dcard, .allin__copy', panel);
+    gsap.fromTo(items, { y: 40, opacity: 0, rotateX: -8 }, { y: 0, opacity: 1, rotateX: 0, duration: .7, stagger: .05, ease: 'power3.out', clearProps: 'transform' });
     onRender?.(panel);
   };
   $('#menuTabs').addEventListener('click', (e) => {
@@ -78,13 +106,14 @@ export function openModal(d, kind) {
   const m = $('#modal');
   $('#modalImg').src = `/images/${d.img}.webp`;
   const w = $('#modalWrap'); if (d.wrap) { w.src = `/images/${d.wrap}.webp`; w.hidden = false; } else { w.hidden = true; }
-  $('#modalTag').textContent = d.tag || (d.size ? d.size + ' size' : (kind === 'snacks' ? 'Snack' : 'Salad'));
+  $('#modalTag').textContent = d.tag || (d.size ? d.size + ' size' : (kind === 'snacks' ? 'Snack' : kind === 'juss' ? 'Juss' : 'Salad'));
   $('#modalTitle').textContent = d.name + (d.size ? ` (${d.size})` : '');
-  $('#modalPrice').textContent = rupiah(d.price);
-  $('#modalDesc').textContent = d.desc;
+  $('#modalPrice').textContent = d.from ? `from ${rupiah(d.from)}` : rupiah(d.price);
+  $('#modalDesc').textContent = (d.kcal ? (d.kcal.length > 1 ? `Wrap ${d.kcal[0]} kcal · Bowl ${d.kcal[1]} kcal. ` : `${d.kcal[0]} kcal. `) : '') + d.desc;
+  $('#modalContainHead').textContent = kind === 'juss' ? 'Made with' : kind === 'gifts' ? 'How it works' : 'Contain';
   $('#modalContain').innerHTML = d.contain.map(c => `<li>${c}</li>`).join('') + (d.bowlOnly ? d.bowlOnly.map(c => `<li class="alt">${c} (bowl only)</li>`).join('') : '');
   $('#modalChoice').innerHTML = d.choice ? `<p><b>Choice of meat:</b> ${MEATS.map(m => m.name + (m.extra ? ` (+${short(m.extra)})` : '')).join(', ')}.<br><b>Choice of dressing:</b> ${DRESSINGS.map(x => x.name).join(', ')}.</p>` : '';
-  $('#modalOrder').href = wa(`Halo Circle Heart! Saya mau pesan ${d.name}${d.size ? ' (' + d.size + ')' : ''} — ${rupiah(d.price)}.`);
+  $('#modalOrder').href = wa(d.from ? `Halo Circle Heart! Saya mau tanya ${d.name} (mulai ${rupiah(d.from)}).` : `Halo Circle Heart! Saya mau pesan ${d.name}${d.size ? ' (' + d.size + ')' : ''} — ${rupiah(d.price)}.`);
   lastFocus = document.activeElement;
   m.classList.add('is-open'); m.setAttribute('aria-hidden', 'false');
   document.dispatchEvent(new CustomEvent('modal:open'));
@@ -119,16 +148,16 @@ export function initDressings({ onHover }) {
 
 /* ---------------- Builder ---------------- */
 export function initBuilder(scene) {
-  const state = { style: 'bowl', meat: MEATS[0], dressing: DRESSINGS[0], extras: new Set() };
-  const BASE = SALADS[0].price;
+  const state = { style: 'bowl', meat: MEATS[0], dressing: DRESSINGS.find(d => d.id === 'caesar'), extras: new Set() };
+  const BASE = ALL_IN.price;
 
   $('#meatChips').innerHTML = MEATS.map((m, i) => `<button class="chip ${i === 0 ? 'is-active' : ''}" data-meat="${m.id}">${m.name}${m.extra ? ` <small>+${short(m.extra)}</small>` : ''}</button>`).join('');
-  $('#dressingChips').innerHTML = DRESSINGS.map((d, i) => `<button class="chip ${i === 0 ? 'is-active' : ''}" data-dressing="${d.id}"><span class="dot" style="background:${d.color}"></span>${d.name}</button>`).join('');
+  $('#dressingChips').innerHTML = DRESSINGS.map((d) => `<button class="chip ${d.id === state.dressing.id ? 'is-active' : ''}" data-dressing="${d.id}"><span class="dot" style="background:${d.color}"></span>${d.name}${d.extra ? ` <small>+${short(d.extra)}</small>` : ''}</button>`).join('');
   $('#extraChips').innerHTML = BUILDER_EXTRAS.map(x => `<button class="chip" data-extra="${x.id}">${x.name} <small>+${short(x.price)}</small></button>`).join('');
 
   const summarize = () => {
-    const lines = [[`All In Salad (${state.style})`, rupiah(BASE)], [state.meat.name, state.meat.extra ? '+' + short(state.meat.extra) : 'included'], [state.dressing.name, 'included']];
-    let total = BASE + state.meat.extra;
+    const lines = [[`All In Salad (${state.style})`, rupiah(BASE)], [state.meat.name, state.meat.extra ? '+' + short(state.meat.extra) : 'included'], [state.dressing.name, state.dressing.extra ? '+' + short(state.dressing.extra) : 'included']];
+    let total = BASE + state.meat.extra + (state.dressing.extra || 0);
     for (const id of state.extras) { const x = BUILDER_EXTRAS.find(e => e.id === id); lines.push([x.name, '+' + short(x.price)]); total += x.price; }
     $('#sumLines').innerHTML = lines.map(([a, b]) => `<li><span>${a}</span><span>${b}</span></li>`).join('');
     const priceEl = $('#sumPrice');
@@ -155,24 +184,34 @@ export function initBuilder(scene) {
 /* ---------------- Catering ---------------- */
 export function initCatering() {
   const plans = $('#cateringPlans');
-  const render = (key) => {
-    const p = CATERING.healthy[key];
-    plans.innerHTML = p.plans.map(([n, d, price], i) => `
+  const state = { meal: 'both', juss: 0 }; // juss: 0 = catering only, 1 = first bundle option, 2 = second
+  const render = () => {
+    const p = CATERING[state.meal];
+    plans.innerHTML = p.plans.map(([n, d, price, bundles], i) => {
+      const b = state.juss ? bundles[Math.min(state.juss, bundles.length) - 1] : null;
+      return `
       <article class="plan tilt ${i === 1 ? 'is-popular' : ''}">
         ${i === 1 ? '<span class="ribbon">Popular</span>' : ''}
         <h3>${n}</h3><small>${d} · ${p.title}</small>
-        <div class="price" data-price="${price}">${rupiah(price)}</div>
-      </article>`).join('');
+        <div class="price">${rupiah(b ? b.price : price)}</div>
+        ${b ? `<span class="plan__juss">catering + ${b.juss} Juss</span>` : `<span class="plan__juss plan__juss--muted">catering only</span>`}
+      </article>`; }).join('');
     gsap.fromTo('.plan', { rotateY: -40, opacity: 0, y: 20 }, { rotateY: 0, opacity: 1, y: 0, duration: .7, stagger: .08, ease: 'power3.out', clearProps: 'transform' });
+    // second bundle option only exists for Lunch & Dinner
+    $('#jussToggle [data-juss="2"]').hidden = state.meal !== 'both';
   };
-  const toggle = $('#cateringToggle'); const thumb = $('.catering__thumb');
-  const moveThumb = (b) => { thumb.style.width = b.offsetWidth + 'px'; thumb.style.transform = `translateX(${b.offsetLeft - 6}px)`; };
-  toggle.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; $$('button', toggle).forEach(x => x.classList.toggle('is-active', x === b)); moveThumb(b); render(b.dataset.plan); });
-  requestAnimationFrame(() => moveThumb($('button.is-active', toggle)));
-  window.addEventListener('resize', () => moveThumb($('button.is-active', toggle)));
-  render('both');
-  $('#familyPlans').innerHTML = CATERING.family.plans.map(([n, d, p]) => `<li><span>${n}${d ? ` <small>(${d})</small>` : ''}</span><span>${rupiah(p)}</span></li>`).join('');
+  const bindToggle = (sel, key) => {
+    const toggle = $(sel); const thumb = $('.catering__thumb', toggle);
+    const moveThumb = (b) => { thumb.style.width = b.offsetWidth + 'px'; thumb.style.transform = `translateX(${b.offsetLeft - 6}px)`; };
+    toggle.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; $$('button', toggle).forEach(x => x.classList.toggle('is-active', x === b)); moveThumb(b); state[key] = key === 'juss' ? +b.dataset.juss : b.dataset.plan; if (key === 'meal' && state.juss === 2 && state.meal !== 'both') { state.juss = 1; const j = $('#jussToggle [data-juss="1"]'); $$('#jussToggle button').forEach(x => x.classList.toggle('is-active', x === j)); bindToggle.move?.(j); } render(); });
+    requestAnimationFrame(() => moveThumb($('button.is-active', toggle)));
+    window.addEventListener('resize', () => moveThumb($('button.is-active', toggle)));
+    if (key === 'juss') bindToggle.move = moveThumb;
+  };
+  bindToggle('#cateringToggle', 'meal'); bindToggle('#jussToggle', 'juss');
+  render();
   $('#cateringNotes').innerHTML = CATERING.notes.map(n => `<li>${n}</li>`).join('');
+  $('#cateringOrder').href = wa('Halo Circle Heart! Saya mau tanya paket catering.');
 }
 
 /* ---------------- Visit ---------------- */
@@ -252,5 +291,5 @@ export function initHeroPicker(scene) {
   };
   root.addEventListener('click', (e) => { const b = e.target.closest('.pick'); if (b) apply(b.dataset.bowl); });
   document.addEventListener('bowl:change', (e) => { const k = e.detail; if ($('.pick.is-active', root)?.dataset.bowl !== k) apply(k); });
-  $('.hero__dish-order')?.setAttribute('href', wa('Halo Circle Heart! Saya mau pesan All In Salad — Rp 40.000.'));
+  $('.hero__dish-order')?.setAttribute('href', wa(`Halo Circle Heart! Saya mau pesan All In Salad — ${rupiah(ALL_IN.price)}.`));
 }

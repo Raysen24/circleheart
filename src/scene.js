@@ -16,7 +16,7 @@ const expo = (t) => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
 export const POSES = {
   hero:      { fx: 0.22,  fy: -0.02, scale: 1.0,  explode: 0, spread: 1.0, speed: 0.10, ofx: 0.22, ofy: -0.02, formation: 'orbit', interactive: true, dark: true, text: 'hero', m: { fx: 0, fy: 0.2, scale: 0.58 } },
-  story:     { fx: 0.26,  fy: -0.22, scale: 0.7,  explode: 1, spread: 1.3, speed: 0.06, ofx: 0.26, ofy: 0.0,  formation: 'orbit', labels: true, interactive: true, m: { fx: 0, fy: -0.52, scale: 0.4, ofx: 0, ofy: -0.1 } },
+  story:     { fx: 0.26,  fy: -0.22, scale: 0.7,  explode: 1, spread: 1.3, speed: 0.06, ofx: 0.26, ofy: 0.0,  formation: 'orbit', labels: true, interactive: true, m: { fx: 0, fy: 0, scale: 0.5, ofx: 0, ofy: 0, spread: 1.0 } },
   menu:      { fx: 0.45,  fy: -0.34, scale: 0.55, explode: 0, spread: 2.4, speed: 0.04, ofx: 0,    ofy: 0,    formation: 'orbit', m: { fx: 0.48, fy: -0.44, scale: 0.35, ofx: 0, ofy: 0 } },
   dressings: { fx: -0.36, fy: 0.22,  scale: 0.72, explode: 0, spread: 1.3, speed: 0.08, ofx: -0.3, ofy: 0.1,  formation: 'orbit', dark: true, text: 'dressings', m: { fx: -0.38, fy: 0.32, scale: 0.42 } },
   builder:   { fx: 0.25,  fy: 0.14,  scale: 0.84, explode: 0, spread: 1.0, speed: 0.10, ofx: 0.25, ofy: 0.1,  formation: 'orbit', interactive: true, dark: true, text: 'builder', m: { fx: 0.36, fy: 0.36, scale: 0.42 } },
@@ -224,6 +224,7 @@ export class SaladScene {
   setPose(name) { this.target = { ...(POSES[name] || POSES.hero) }; this.poseName = name; if (!this.target.interactive) this.setHit(false); if (name !== 'story') this.explodeLock = false; }
   setExplodeScroll(p) { this.explodeScroll = p; }
   setHeroScroll(p, px) { this.heroScroll = p; this.heroPx = px || 0; }
+  setStage(el) { this.stageEl = el; }
   setScrollVelocity(v) { this.scrollVel = v; }
   intro() { this.cur.scale = 0.001; this.cur.y = -1.4; this.burst = 1; }
   toss() { this.bounce = 1; this.burst = 1; document.dispatchEvent(new CustomEvent('bowl:toss')); }
@@ -274,12 +275,22 @@ export class SaladScene {
     const hp = (mob && this.poseName === 'hero') ? (this.heroScroll || 0) : 0;
     // phones: the canvas is fixed, so lock the bowl to the page scroll while in the hero so it leaves with the hero copy
     const heroLift = hp > 0 ? (this.heroPx / this.vh) * this.viewH : 0;
-    c.x = lerp(c.x, T.fx * this.viewW * fxScale, k); c.y = lerp(c.y, T.fy * this.viewH + heroLift, k);
+    // phones: anchor the exploded bowl to the story stage element so it scrolls with the page,
+    // and open it as the stage rises into view
+    let stageY = null, stageEx = null;
+    if (mob && this.poseName === 'story' && this.stageEl) {
+      const r = this.stageEl.getBoundingClientRect();
+      const cy = r.top + r.height * 0.6;
+      stageY = ((this.vh / 2 - cy) / this.vh) * this.viewH;
+      stageEx = clamp01((this.vh * 0.95 - r.top) / (this.vh * 0.5));
+    }
+    const kk = stageY !== null ? 1 - Math.exp(-dt * 12) : k;
+    c.x = lerp(c.x, stageY !== null ? 0 : T.fx * this.viewW * fxScale, kk); c.y = lerp(c.y, stageY !== null ? stageY : T.fy * this.viewH + heroLift, kk);
     c.scale = lerp(c.scale, T.scale * sScale * (1 - 0.2 * hp), k);
-    const exTarget = this.poseName === 'story' ? (this.explodeLock ? 1 : T.explode * this.explodeScroll) : T.explode;
+    const exTarget = this.poseName === 'story' ? (this.explodeLock ? 1 : (stageEx !== null ? stageEx : T.explode * this.explodeScroll)) : T.explode;
     c.explode = lerp(c.explode, exTarget, 1 - Math.exp(-dt * 3.5));
     c.spread = lerp(c.spread, T.spread * (mob ? 0.75 : 1), k);
-    c.ox = lerp(c.ox, T.ofx * this.viewW * fxScale, k); c.oy = lerp(c.oy, T.ofy * this.viewH + heroLift, k);
+    c.ox = lerp(c.ox, stageY !== null ? 0 : T.ofx * this.viewW * fxScale, kk); c.oy = lerp(c.oy, stageY !== null ? stageY : T.ofy * this.viewH + heroLift, kk);
     c.heart = lerp(c.heart, T.formation === 'heart' ? 1 : 0, k * 0.8);
     c.labels = lerp(c.labels, T.labels ? 1 : 0, k);
     c.builder = lerp(c.builder, this.poseName === 'builder' ? 1 : 0, k);
@@ -317,7 +328,7 @@ export class SaladScene {
     const n = this.layers.length;
     for (const L of this.layers) {
       const e = smooth((ex * 1.35) - L.i * (0.35 / n));
-      const yUp = 0.42 + L.i * 0.27, xOff = L.side * 0.12 * (L.i % 3 === 0 ? 1 : 0.5);
+      const yUp = 0.42 + L.i * (mob ? 0.3 : 0.27), xOff = L.side * (mob ? 0.06 : 0.12) * (L.i % 3 === 0 ? 1 : 0.5);
       L.s.position.set(lerp(0, xOff, e), lerp(0.15, yUp, e) + Math.sin(t * 0.9 + L.phase) * 0.03 * e, lerp(0.02 + L.i * 0.01, 0.12 + L.i * 0.09, e));
       L.s.rotation.z = L.tilt * e; L.s.scale.setScalar(Math.max(0.001, e * (0.85 + 0.15 * e))); L.s.visible = e > 0.001;
       if (L.el) {

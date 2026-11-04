@@ -39,7 +39,7 @@ async function boot() {
   initMenu({ onRender: (panel) => { initTilt(panel); ScrollTrigger.refresh(); } });
   initModal();
   initDressings({ onHover: (d) => scene?.setDressing(d) });
-  if (scene) { initBuilder(scene); initHeroPicker(scene); }
+  if (scene) { initBuilder(scene); initHeroPicker(scene); scene.setStage($('.story__stage')); }
   initCatering();
   initVisit();
   initTilt();
