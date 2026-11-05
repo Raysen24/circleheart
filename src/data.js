@@ -112,7 +112,7 @@ export const SALADS = [
   { id: 'green-fit', name: 'Green Fit', price: 62000, tag: 'Refuel', img: 'green-fit',
     desc: 'Healthy Food That Will Refuel Your Energy and Mood.',
     contain: ['Mixed greens', 'Kale', 'Edamame', 'White cabbage', 'Red cabbage', 'Apple', 'Shilin Chicken', 'Pumpkin Seeds', 'Steam Potato', 'Cucumber', 'Onions', 'Eggs with Caesar Dressing & Sweet Mayo'] },
-  { id: 'sawadee', name: 'Sawadee', price: 45000, tag: 'Contains shrimp', img: 'sawadee', wrap: 'sawadee-wrap', kcal: [380, 400],
+  { id: 'sawadee', name: 'Sawadee', price: 50000, tag: 'Contains shrimp', img: 'sawadee', wrap: 'sawadee-wrap', kcal: [380, 400],
     desc: 'Thai\'s special Salad. Contain *Shrimp*',
     contain: ['Mixed Greens', 'Chili Lime Shrimp', 'Glass Noodle', 'Cucumber', 'Carrots', 'Chasew Nut', 'Crispy Garlic and Thai Spicy Dressing'], bowlOnly: ['Corn', 'Edamame', 'Egg'] },
   { id: 'red-asia', name: 'Red Asia', price: 62000, tag: 'Dragon fruit', img: 'red-asia',
